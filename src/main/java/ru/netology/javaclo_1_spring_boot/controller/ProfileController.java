@@ -1,5 +1,6 @@
 package ru.netology.javaclo_1_spring_boot.controller;
 
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,6 +8,7 @@ import ru.netology.javaclo_1_spring_boot.systemProfile.SystemProfile;
 
 @RestController
 @RequestMapping("/")
+@SpringBootApplication
 public class ProfileController {
     private SystemProfile profile;
 

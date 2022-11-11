@@ -17,43 +17,28 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class SpringBootTask1ApplicationTests {
 
     @Autowired
-    TestRestTemplate testRestTemplate;
-
-    @Container
-    private static final GenericContainer<?> devappContainer = new GenericContainer<>("devapp")
+    TestRestTemplate restTemplate;
+    public static GenericContainer<?> devapp = new GenericContainer<>("devapp")
             .withExposedPorts(8080);
-
-    @Container
-    private static final GenericContainer<?> prodappContainer = new GenericContainer<>("prodapp")
+    public static GenericContainer<?> prodapp = new GenericContainer<>("prodapp")
             .withExposedPorts(8081);
+
 
     @BeforeAll
     public static void setUp() {
-        devappContainer.start();
-        prodappContainer.start();
-    }
-
-
-    @Test
-    void contextLoadsDevApp() {
-        String HOST = "http://192.168.99.100:";
-        Integer port = devappContainer.getMappedPort(8080);
-        System.out.println("port: " + port);
-        ResponseEntity<String> forEntity = testRestTemplate
-                .getForEntity(HOST + port, String.class);
-        System.out.println(forEntity.getBody());
-        Assertions.assertEquals("Current profile is dev", forEntity.getBody());
+        devapp.start();
+        prodapp.start();
     }
 
     @Test
-    void contextProdApp() {
-        String HOST = "http://192.168.99.100:";
-        Integer port = prodappContainer.getMappedPort(8081);
-        System.out.println("port: " + port);
-        ResponseEntity<String> forEntity = testRestTemplate
-                .getForEntity(HOST + port, String.class);
+    void contextLoadsDevapp() {
+        ResponseEntity<String> forEntity = restTemplate.getForEntity("http://localhost:" + devapp.getMappedPort(8080), String.class);
         System.out.println(forEntity.getBody());
-        Assertions.assertEquals("Current profile is production", forEntity.getBody());
+    }
+    @Test
+    void contextLoadsProdapp() {
+        ResponseEntity<String> forEntity = restTemplate.getForEntity("http://localhost:" + prodapp.getMappedPort(8080), String.class);
+        System.out.println(forEntity.getBody());
     }
 
 }
